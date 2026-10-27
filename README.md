@@ -8,13 +8,12 @@ Businesses receive invoices from many vendors, and every vendor uses a different
 
 ## Example output
 
-| File | Company | Date | Total |
-|---|---|---|---|
-| invoice_1.pdf | Al-Noor Stationers | 2026-10-03 | 19200 |
-| invoice_2.pdf | Green Leaf Catering | 2026-10-15 | 25500 |
-| invoice_3.pdf | Rapid Print House | 2026-09-28 | 27100 |
-| invoice_4.pdf | TechFix Computers | 2026-10-21 | 19700 |
-
+| File | Company | Invoice No | Customer | Date | Total |
+|---|---|---|---|---|---|
+| invoice_1.pdf | Al-Noor Stationers | AN-1042 | FMH Practice Library | 2026-10-03 | 19200 |
+| invoice_2.pdf | Green Leaf Catering | GLC-0087 | City Book Club | 2026-10-15 | 25500 |
+| invoice_3.pdf | Rapid Print House | RPH/2026/331 | Sunrise Academy | 2026-09-28 | 27100 |
+| invoice_4.pdf | TechFix Computers | TF-5519 | Mr. Imran Qureshi | 2026-10-21 | 19700 |
 All dates are normalised to `YYYY-MM-DD`, whatever format the invoice used.
 
 ## Features
