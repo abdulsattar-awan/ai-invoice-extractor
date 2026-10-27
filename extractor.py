@@ -11,9 +11,10 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 PROMPT = (
-    "Extract the seller company name, invoice date and total amount from this invoice. "
+    "Extract the seller company name, invoice number, customer name, invoice date and total amount from this invoice. "
+    "If a field is missing, use an empty string. "
     "Reply ONLY with JSON like this: "
-    '{"company": "...", "date": "YYYY-MM-DD", "total": 0}'
+    '{"company": "...", "invoice_number": "...", "customer": "...", "date": "YYYY-MM-DD", "total": 0}'
 )
 
 
@@ -38,7 +39,7 @@ def ask_gemini(pdf_data):
 wb = Workbook()
 sheet = wb.active
 sheet.title = "Invoices"
-sheet.append(["File", "Company", "Date", "Total"])
+sheet.append(["File", "Company", "Invoice No", "Customer", "Date", "Total"])
 for cell in sheet[1]:
     cell.font = Font(bold=True)
 
@@ -47,16 +48,18 @@ for file_name in os.listdir("invoices"):
         pdf_data = f.read()
 
     data = ask_gemini(pdf_data)
-
     if data is None:
         print(file_name, "→ ❌ 3 koshishon ke baad bhi nahi hua, agli file par ja rahe hain")
-        sheet.append([file_name, "ERROR", "", ""])
+        sheet.append([file_name, "ERROR", "", "", "", ""])
     else:
-        print(file_name, "→", data["company"], "|", data["date"], "|", data["total"])
-        sheet.append([file_name, data["company"], data["date"], data["total"]])
+        print(file_name, "→", data.get("company"), "|", data.get("invoice_number"), "|", data.get("customer"), "|", data.get("date"), "|", data.get("total"))
+        sheet.append([file_name, data.get("company"), data.get("invoice_number"), data.get("customer"), data.get("date"), data.get("total")])
+    
 sheet.column_dimensions["A"].width = 18
 sheet.column_dimensions["B"].width = 25
-sheet.column_dimensions["C"].width = 14
-sheet.column_dimensions["D"].width = 12
+sheet.column_dimensions["C"].width = 16
+sheet.column_dimensions["D"].width = 24
+sheet.column_dimensions["E"].width = 14
+sheet.column_dimensions["F"].width = 12
 wb.save("invoices_report.xlsx")
 print("\n✅ Excel file ban gayi: invoices_report.xlsx")
